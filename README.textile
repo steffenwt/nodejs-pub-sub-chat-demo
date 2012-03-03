@@ -21,4 +21,4 @@ A non-redis version just based on socket.io can be started with:
 $ node app.js
 
 <h1>Credits</h1>
-This example is based on a Cramp application originally written by Pieter Noordhuis – https://gist.github.com/348262.
+This example is based on a Cramp application originally written by <a href="https://gist.github.com/348262">Pieter Noordhuis</a> and also based on <a href="https://github.com/lifo/cramp-pub-sub-chat-demo">cramp-pub-sub-chat-demo</a>.

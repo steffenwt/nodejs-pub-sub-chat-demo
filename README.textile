@@ -7,6 +7,7 @@ Simple application based to show Redis Pub/Sub mechanism together with Node.js a
 <li><a href="http://nodejs.org">Node.js</a> must be installed
 <li>Node.js plugin <a href="http://socket.io">socket.io</a> must be in place (npm install socket.io).
 <li>Node.js plugin <a href="https://github.com/mranney/node_redis">redis</a> installed (npm install redis).
+</ul>
 
 Start via:
 
@@ -19,5 +20,5 @@ A non-redis version just based on socket.io can be started with:
 
 $ node app.js
 
-<h1>Credits<h1>
+<h1>Credits</h1>
 This example is based on a Cramp application originally written by Pieter Noordhuis – https://gist.github.com/348262.

@@ -6,6 +6,7 @@ var app = require('http').createServer(handler)
 app.listen(80);
 
 function handler(req, res) {
+	// just return the index HTML
 	fs.readFile(__dirname + '/index.html',
 	function (err, data) {
 		if (err) {
@@ -23,6 +24,10 @@ io.configure( function() {
 });
 
 function SessionController (user) {
+	// session controller class for storing redis connections
+	// this is more a workaround for the proof-of-concept
+	// in "real" applications session handling should NOT
+	// be done like this
 	this.sub = redis.createClient();
 	this.pub = redis.createClient();
 	
@@ -68,14 +73,14 @@ SessionController.prototype.destroyRedis = function() {
 	if (this.pub != null) this.pub.quit();
 };
 
-io.sockets.on('connection', function (socket) {
-	socket.on('chat', function (data) {
+io.sockets.on('connection', function (socket) { // the actual socket callback
+	socket.on('chat', function (data) { // receiving chat messages
 		var msg = JSON.parse(data);
 		switch (msg.action) {
-			case 'join': var sessionController = new SessionController(msg.user);
-						 socket.set('sessionController', sessionController);
-						 sessionController.subscribe(socket);
-						 break;
+			case 'join': 	var sessionController = new SessionController(msg.user);
+						 	socket.set('sessionController', sessionController);
+						 	sessionController.subscribe(socket);
+						 	break;
 			case 'message': socket.get('sessionController', function(err, sessionController) {
 								if (sessionController == null) {
 									// implicit login - socket can be timed out or disconnected
@@ -88,11 +93,12 @@ io.sockets.on('connection', function (socket) {
 								}
 							});
 							break;
-
 		}
+		// just some logging to trace the chat data
 		console.log(data);
 	});
-	socket.on('disconnect', function() {
+
+	socket.on('disconnect', function() { // disconnect from a socket - might happen quite frequently depending on network quality
 		socket.get('sessionController', function(err, sessionController) {
 			if (sessionController == null) return;
 			sessionController.unsubscribe();

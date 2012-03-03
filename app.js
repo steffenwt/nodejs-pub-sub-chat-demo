@@ -2,9 +2,9 @@ var app = require('http').createServer(handler)
 	, io = require('socket.io').listen(app)
 	, fs = require('fs')
 	
-	app.listen(80, "192.168.178.34");
+	app.listen(80);
 	
-	function handler(req, res) {
+	function handler(req, res) { // just return index.html
 		fs.readFile(__dirname + '/index.html',
 			function (err, data) {
 				if (err) {
@@ -17,7 +17,7 @@ var app = require('http').createServer(handler)
 			});
 	}
 	
-	io.sockets.on('connection', function (socket) {
+	io.sockets.on('connection', function (socket) { // handler for incoming connections
 		socket.on('chat', function (data) {
 			var msg = JSON.parse(data);
 			switch (msg.action) {

@@ -29,7 +29,7 @@ $(document).ready(function(){
 		var socket = io.connect('http://' + host);
 		
 		// send join message
-		socket.emit('chat', $.toJSON({ action: 'join', user: name }));
+		socket.emit('join', $.toJSON({ user: name }));
 		
 		var container = $('div#msgs');
 		
@@ -77,16 +77,16 @@ $(document).ready(function(){
 			container.scrollTop(container.find('ul').innerHeight());
 		});
 
-		// new message is send in the input box
-	    $('#channel form').submit(function(event) {
-	      event.preventDefault();
-	      var input = $(this).find(':input');
-	      var msg = input.val();
-	      socket.emit('chat', $.toJSON({action: 'message', user: name, msg: msg}));
-	      input.val('');
-	    });		
-	}
+    // new message is send in the input box
+    $('#channel form').submit(function(event) {
+      event.preventDefault();
+      var input = $(this).find(':input');
+      var msg = input.val();
+      socket.emit('chat', $.toJSON({action: 'message', user: name, msg: msg}));
+      input.val('');
+    }); 
 
+	}
 });
 </script>
 <style type="text/css" media="screen">

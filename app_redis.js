@@ -3,7 +3,7 @@ var app = require('http').createServer(handler),
 	fs = require('fs'),
 	redis = require('redis');
 
-app.listen(80);
+app.listen(3001);
 
 function handler(req, res) {
 	// just return the index HTML
@@ -18,10 +18,6 @@ function handler(req, res) {
 		res.end(data);
 	});
 }
-
-io.configure( function() {
-	io.set('close timeout', 60*60*24); // 24h time out
-});
 
 function SessionController (user) {
 	// session controller class for storing redis connections
@@ -77,37 +73,30 @@ io.sockets.on('connection', function (socket) { // the actual socket callback
 	console.log(socket.id);
 	socket.on('chat', function (data) { // receiving chat messages
 		var msg = JSON.parse(data);
-		socket.get('sessionController', function(err, sessionController) {
-			if (sessionController === null) {
-				// implicit login - socket can be timed out or disconnected
-				var newSessionController = new SessionController(msg.user);
-				socket.set('sessionController', newSessionController);
-				newSessionController.rejoin(socket, msg);
-			} else {
-				var reply = JSON.stringify({action: 'message', user: msg.user, msg: msg.msg });
-				sessionController.publish(reply);
-			}
-		});
-		// just some logging to trace the chat data
+		if (socket.sessionController === null) {
+			// implicit login - socket can be timed out or disconnected
+			socket.sessionController = new SessionController(msg.user);
+			socket.sessionController.rejoin(socket, msg);
+		} else {
+			var reply = JSON.stringify({action: 'message', user: msg.user, msg: msg.msg });
+			socket.sessionController.publish(reply);
+		}
 		console.log(data);
 	});
 
 	socket.on('join', function(data) {
 		var msg = JSON.parse(data);
-		var sessionController = new SessionController(msg.user);
-		socket.set('sessionController', sessionController);
-		sessionController.subscribe(socket);
+		socket.sessionController = new SessionController(msg.user);
+		socket.sessionController.subscribe(socket);
 		// just some logging to trace the chat data
 		console.log(data);
 	});
 
 	socket.on('disconnect', function() { // disconnect from a socket - might happen quite frequently depending on network quality
-		socket.get('sessionController', function(err, sessionController) {
-			if (sessionController === null) return;
-			sessionController.unsubscribe();
-			var leaveMessage = JSON.stringify({action: 'control', user: sessionController.user, msg: ' left the channel' });
-			sessionController.publish(leaveMessage);
-			sessionController.destroyRedis();
-		});
+		if (socket.sessionController === null) return;
+		socket.sessionController.unsubscribe();
+		var leaveMessage = JSON.stringify({action: 'control', user: socket.sessionController.user, msg: ' left the channel' });
+		socket.sessionController.publish(leaveMessage);
+		socket.sessionController.destroyRedis();
 	});
 });

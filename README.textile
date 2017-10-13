@@ -5,8 +5,8 @@ Simple application based to show Redis Pub/Sub mechanism together with Node.js a
 <ul>
 <li><a href="http://redis.io">Redis</a> must be installed and running.
 <li><a href="http://nodejs.org">Node.js</a> must be installed
-<li>Node.js plugin <a href="http://socket.io">socket.io</a> must be in place (npm install socket.io).
-<li>Node.js plugin <a href="https://github.com/mranney/node_redis">redis</a> installed (npm install redis).
+<li>npm install
+<li>npm run redis OR npm run sockets
 </ul>
 
 Start via:

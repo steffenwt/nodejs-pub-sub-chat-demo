@@ -1,0 +1,16 @@
+{
+  "name": "nodejs-pub-sub-chat-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:steffenwt/nodejs-pub-sub-chat-demo.git",
+  "author": "steffenwt <steffenwt@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "redis": "node app_redis.js",
+    "sockets": "node app.js"
+  },
+  "dependencies": {
+    "redis": "^2.8.0",
+    "socket.io": "^2.0.3"
+  }
+}

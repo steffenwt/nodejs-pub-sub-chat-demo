@@ -1,6 +1,6 @@
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
-<script src='http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js'></script>
-<script src='http://datejs.googlecode.com/svn/trunk/build/date.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-json/2.6.0/jquery.json.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 $(document).ready(function(){
@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 	function join(name) {
 		var host = window.location.host.split(':')[0];
-		var socket = io.connect('http://' + host);
+    var socket = io();
 		
 		// send join message
 		socket.emit('join', $.toJSON({ user: name }));
@@ -129,7 +129,8 @@ $(document).ready(function(){
   }
   #channel {
     margin-top: 100px;
-    height: 480px;
+    height: 480
+    px;
     position: relative;
   }
   #channel div#descr {
